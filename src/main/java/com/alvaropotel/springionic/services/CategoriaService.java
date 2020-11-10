@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.alvaropotel.springionic.domain.Categoria;
+import com.alvaropotel.springionic.dto.CategoriaDTO;
 import com.alvaropotel.springionic.repositories.CategoriaRepository;
 import com.alvaropotel.springionic.services.exceptions.DataIntegrityException;
 import com.alvaropotel.springionic.services.exceptions.ObjectNotFoundException;
@@ -56,5 +57,8 @@ public class CategoriaService {
 		return repo.findAll(pageRequest);
 	}
 	
+	public Categoria fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
+	}
 	
 }
