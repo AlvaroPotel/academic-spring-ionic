@@ -1,0 +1,29 @@
+package com.alvaropotel.springionic.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.alvaropotel.springionic.domain.Cliente;
+import com.alvaropotel.springionic.repositories.ClienteRepository;
+import com.alvaropotel.springionic.security.UserSS;
+
+
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+	@Autowired
+	private ClienteRepository repo;
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		Cliente cli = repo.findByEmail(email);
+		if (cli == null) {
+			throw new UsernameNotFoundException(email);
+		}
+		return new UserSS(cli.getId(), cli.getEmail(), cli.getSenha(), cli.getPerfis());
+	}
+
+}
