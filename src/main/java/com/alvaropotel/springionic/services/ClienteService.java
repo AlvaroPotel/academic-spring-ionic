@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alvaropotel.springionic.domain.Cidade;
 import com.alvaropotel.springionic.domain.Cliente;
 import com.alvaropotel.springionic.domain.Endereco;
+import com.alvaropotel.springionic.domain.enums.Perfil;
 import com.alvaropotel.springionic.domain.enums.TipoCliente;
 import com.alvaropotel.springionic.dto.ClienteDTO;
 import com.alvaropotel.springionic.dto.ClienteNewDTO;
 import com.alvaropotel.springionic.repositories.ClienteRepository;
 import com.alvaropotel.springionic.repositories.EnderecoRepository;
+import com.alvaropotel.springionic.security.UserSS;
+import com.alvaropotel.springionic.services.exceptions.AuthorizationException;
 import com.alvaropotel.springionic.services.exceptions.DataIntegrityException;
 import com.alvaropotel.springionic.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,11 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 	
 	public Cliente find(Integer id) {
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
