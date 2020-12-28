@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SpringIonicApplication implements CommandLineRunner {
+	
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringIonicApplication.class, args);
